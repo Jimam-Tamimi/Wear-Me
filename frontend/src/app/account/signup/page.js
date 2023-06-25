@@ -3,18 +3,33 @@
 import React from 'react'
 import styles from "../styles.module.css"
 import { useForm } from 'react-hook-form'
-
-
+import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { loginUser } from '@/redux/slices/account/accountSlice'
 
 export default function page() {
+    const dispatch = useDispatch()
+    const account = useSelector((state) => state.account)
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log(data);
+        if(data.password != data.confirmPassword){
+            return
+        }
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}account/users/`, data)
+            if(response.status == 201){
+                dispatch( loginUser(data))
+            }
+        } catch (err) {
+            console.log(err)
+        }
+
     }
     
     return (
         <>
+        <button onClick={e => console.log(account)}>click</button>
             <div className="relative min-h-screen flex ">
                 <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
                     <div className="sm:w-1/2 md:w-2/6 h-full hidden md:flex flex-auto items-center justify-center p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
