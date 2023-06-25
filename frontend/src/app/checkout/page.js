@@ -1,11 +1,14 @@
 import React from "react";
-import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
+import FormSection from './FormSection'
 export default function Checkout() {
   return (
     <>
-      <div className="flex flex-col justify-center max-w-2xl p-5 m-auto my-5 lg:flex-row lg:max-w-7xl lg:px-8 lg:justify-between">
+      <div className="flex flex-col justify-center max-w-2xl p-5 m-auto lg-my-5  lg:flex-row lg:max-w-7xl lg:px-8 lg:justify-between">
+
         <div className="flex flex-col space-y-6 lg:w-4/12">
+          <h2 className="mb-5 md:mb-4 text-2xl font-semibold">Products</h2>
+
           <div className="flex justify-start w-full product">
             <div className="h-24 mr-3 w-36 ">
               <img
@@ -29,8 +32,8 @@ export default function Checkout() {
               </div>
             </div>
             <div className="ml-auto flex flex-col justify-between">
-              <RxCross2 className="mt-1 text-1xl cursor-pointer" />
-              <div>qty</div>
+              <button type="button" class="font-semibold   text-sm lg:text-sx text-indigo-600 hover:text-indigo-500 ">Remove</button>
+              <div className="text-end">qty</div>
             </div>
           </div>
           <div className="flex justify-start w-full product">
@@ -56,8 +59,10 @@ export default function Checkout() {
               </div>
             </div>
             <div className="ml-auto flex flex-col justify-between">
-              <RxCross2 className="mt-1 text-1xl cursor-pointer" />
-              <div>qty</div>
+              <button type="button" class="font-semibold   text-sm lg:text-sx text-indigo-600 hover:text-indigo-500 ">Remove</button>
+
+              <div className="text-end">qty</div>
+
             </div>
           </div>
           <div className="flex justify-start w-full product">
@@ -83,8 +88,10 @@ export default function Checkout() {
               </div>
             </div>
             <div className="ml-auto flex flex-col justify-between">
-              <RxCross2 className="mt-1 text-1xl cursor-pointer" />
-              <div>qty</div>
+              <button type="button" class="font-semibold   text-sm lg:text-sx text-indigo-600 hover:text-indigo-500 ">Remove</button>
+
+              <div className="text-end">qty</div>
+
             </div>
           </div>
           <div className="flex justify-start w-full product">
@@ -110,8 +117,10 @@ export default function Checkout() {
               </div>
             </div>
             <div className="ml-auto flex flex-col justify-between">
-              <RxCross2 className="mt-1 text-1xl cursor-pointer" />
-              <div>qty</div>
+              <button type="button" class="font-semibold   text-sm lg:text-sx text-indigo-600 hover:text-indigo-500 ">Remove</button>
+
+              <div className="text-end">qty</div>
+
             </div>
           </div>
           <div className="flex justify-start w-full product">
@@ -137,14 +146,15 @@ export default function Checkout() {
               </div>
             </div>
             <div className="ml-auto flex flex-col justify-between">
-              <RxCross2 className="mt-1 text-1xl cursor-pointer" />
-              <div>qty</div>
+              <button type="button" class="font-semibold   text-sm lg:text-sx text-indigo-600 hover:text-indigo-500 ">Remove</button>
+
+              <div className="text-end">qty</div>
+
             </div>
           </div>
         </div>
-        <div className="h-12 border-2 md:w-2/3 2 r-section lg:w-7/12 ">
-          <form action="" className="order-details"></form>
-          <div className="place-order"></div>
+        <div className=" mb-12   w-full  r-section lg:w-7/12 ">
+          <FormSection />
         </div>
       </div>
     </>
