@@ -6,7 +6,7 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { usePathname, } from 'next/navigation'
 import Cart from './Cart'
-import {AiOutlineShoppingCart} from 'react-icons/ai'
+import { AiOutlineShoppingCart } from 'react-icons/ai'
 
 
 const navigation = [
@@ -17,9 +17,13 @@ const navigation = [
 ]
 
 export default function Header() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const pathname = usePathname()
-    console.log(pathname)
+    if(pathname.startsWith("/account/")){
+      return
+    }
+    
+    
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [openCart, setOpenCart] = useState(false)
 
     return (
@@ -27,28 +31,36 @@ export default function Header() {
             <header className={`${pathname == '/' ? "absolute" : 'relative'}  inset-x-0 top-0 z-50  m-auto max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8`}>
                 <nav className="flex items-center justify-between py-6" aria-label="Global">
                     <div className="flex lg:flex-1">
-                        <a href="#" className="-m-1.5 p-1.5">
+                        <Link href="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">Your Company</span>
                             <img
-                                className="w-auto h-8"
                                 className="w-auto h-8"
                                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                                 alt=""
                             />
-                        </a>
+                        </Link>
                     </div>
- 
-                    <div className="hidden lg:flex lg:gap-x-12">
-                        {navigation.map((item) => (
-                            <Link key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
-                                {item.name}
-                            </Link>
-                        ))}
+
+                    <div className="hidden lg:flex  lg:gap-x-12 lg:justify-between items-center" >
+                        <div className="hidden lg:flex lg:gap-x-12">
+                            {navigation.map((item) => (
+                                <Link key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900 transition-all duration-300 ease-in-out hover:text-indigo-600 hover:font-black ">
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="hidden lg:flex lg:gap-x-12">
+                            <Link href='/login'  
+                        className=" ease-in-out duration-300   rounded-md border hover:border-transparent  border-indigo-600   text-sm px-3 py-1 font-medium text-indigo-600 hover:text-white shadow-sm hover:bg-indigo-600"
+                            
+                            >Login</Link>
+                        </div>
+
                     </div>
-                    
-   
-                    <div style={{marginRight: "50px"}} className="hidden mr-2 lg:flex lg:flex-1 lg:justify-end">
-                        
+
+
+                    <div style={{ marginRight: "50px" }} className="hidden mr-2 lg:flex lg:flex-1 lg:justify-end">
+
                     </div>
                     <div className="flex ml-auto mr-3 ">
                         <button
@@ -118,7 +130,7 @@ export default function Header() {
                             </div>
                         </div>
                     </Dialog.Panel>
-                </Dialog> 
+                </Dialog>
             </header>
             <Cart open={openCart} setOpen={setOpenCart} />
 
