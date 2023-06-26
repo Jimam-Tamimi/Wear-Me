@@ -1,9 +1,11 @@
 "use client"
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import ProductCounter from '@/app/checkout/ProductCounter'
+import { useSelector } from 'react-redux'
+import { getProductDetails } from '@/helpers'
 
 const products = [
   {
@@ -30,12 +32,30 @@ const products = [
   // More products...
 ]
 
-export default function Cart({open, setOpen}) {
+export default function Cart({ open, setOpen }) {
+  const cart = useSelector(state => state.cart)
+  const [cartProducts, setCartProducts] = useState([])
+  async function getProducts(cart) {
+    let tmpProducts = []
+    for (let i = 0; i < cart.length; i++) {
+      const product = cart[i];
+      const res = await getProductDetails(product.slug)
+      if(res.status === 200){
+        tmpProducts.push({...res.data, size:product.size, color:product.color})
+      }
+    }
+    setCartProducts(prevState => [...tmpProducts])
+  }
 
+  useEffect(() => {
+    getProducts(cart)
+    return () => {
+    }
+  }, [cart])
   
   return (
-    <Transition.Root  style={{zIndex: '100'}} show={open} as={Fragment}>
-      <Dialog as="div"  className="relative z-100" onClose={setOpen}>
+    <Transition.Root style={{ zIndex: '100' }} show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-100" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-100"
@@ -80,35 +100,35 @@ export default function Cart({open, setOpen}) {
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {cartProducts.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
+                                    src={product.images[0].image}
+                                    // alt={product.imageAlt}
                                     className="h-full w-full object-cover object-center"
                                   />
                                 </div>
 
-                                <div className="ml-4 flex flex-1 flex-col">
+                                <div className="ml-4 flex flex-1 flex-col ">
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <a href={product.href}>{product.name}</a>
+                                        <Link onClick={e => setOpen(false)} href={`/product/${product?.slug}`} >{product?.name}</Link>
                                       </h3>
-                                      <p className="ml-4">{product.price}</p>
+                                      <p className="ml-4 min-w-max">৳ {product.price}</p>
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">Size: <span>XL</span></p>
-                                    <p className="mt- text-sm text-gray-500">Color: <span>Red</span></p>
+                                    <p className="mt-1 text-sm text-gray-500">Size: <span>{product?.size?.size}</span></p>
+                                    <p className="mt- text-sm text-gray-500">Color: <span style={{color: product?.color?.color_code}} className='font-bold'>{product?.color?.color}</span></p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     {/* <p className="text-gray-500">Qty {product.quantity}</p> */}
-                                    <ProductCounter />
+                                    <ProductCounter  product={product} />
 
                                     <div className="flex">
                                       <button
                                         type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                        className="font-medium select-none   text-indigo-600 hover:text-indigo-500"
                                       >
                                         Remove
                                       </button>
@@ -130,13 +150,13 @@ export default function Cart({open, setOpen}) {
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
                         <Link
-                        onClick={e => setOpen(false)}
+                          onClick={e => setOpen(false)}
                           href="/checkout/"
                           className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                           Checkout
                         </Link>
-                      </div> 
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

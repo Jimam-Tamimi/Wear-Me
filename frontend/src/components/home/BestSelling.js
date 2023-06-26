@@ -110,6 +110,15 @@ export default async function BestSelling() {
             {products.map((product) => (
               <ProductCard product={product} />
             ))} 
+            {products.map((product) => (
+              <ProductCard product={product} />
+            ))} 
+            {products.map((product) => (
+              <ProductCard product={product} />
+            ))} 
+            {products.map((product) => (
+              <ProductCard product={product} />
+            ))} 
           </div>
         </div>
       </section>

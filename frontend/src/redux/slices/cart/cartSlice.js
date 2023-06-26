@@ -16,21 +16,33 @@ const cartSlice = createSlice({
     initialState:initialState,
     reducers: {
         addProduct: (state, action) => {
-            console.log(state)
-            console.log(action)            
             let productIndex = state.findIndex(p => p.id == action.payload.id);
-            console.log(productIndex)
             if(productIndex !== -1){
-
                 state[productIndex] = action.payload;
+                localStorage.setItem("cart", JSON.stringify(state))
                 return state
             }
+            localStorage.setItem("cart", JSON.stringify(state))
             return [...state, action.payload]
+                
+        } ,
+        increaseItemCount: (state, action) => {
+            let productIndex = state.findIndex(p => p.id == action.payload.id); 
+            state[productIndex].itemCount += 1
+            localStorage.setItem("cart", JSON.stringify(state))
+            return state
+                
+        } ,
+        decreaseItemCount: (state, action) => {
+            let productIndex = state.findIndex(p => p.id == action.payload.id); 
+            state[productIndex].itemCount -= 1
+            localStorage.setItem("cart", JSON.stringify(state))
+            return state
                 
         } 
     }
 })
 
-export const {addProduct} = cartSlice.actions
+export const {addProduct, increaseItemCount, decreaseItemCount} = cartSlice.actions
 
 export default cartSlice.reducer

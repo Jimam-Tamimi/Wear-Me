@@ -2,6 +2,7 @@ from itertools import product
 from typing import Iterable, Optional
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -42,6 +43,7 @@ class ProductImage(models.Model):
 
 class Product(models.Model):
     name = models.CharField(_('Product Name'), null=False, blank=False, max_length=300)
+    slug = models.SlugField(_('Slug'), null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(_('Product Description'))
     price = models.FloatField(_('Product Price'), null=False, blank=False)
@@ -49,6 +51,10 @@ class Product(models.Model):
     colors = models.ManyToManyField(Color, verbose_name=_("Colors"))
     sizes = models.ManyToManyField(Size, verbose_name=_("Sizes"))
     images = models.ManyToManyField(ProductImage, verbose_name=_("Product Image"))
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+    
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Product"), on_delete=models.CASCADE)
