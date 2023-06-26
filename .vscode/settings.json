@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "frontend2": true,
+        "frontend/.config.js": true,
+        "frontend/README.md": true,
+        "frontend/postcss.config.js": true,
+        "frontend/package.json": true,
+        "frontend/package-lock.json": true,
+        "frontend/next.config.js": true,
+        "frontend/jsconfig.json": true,
+        "frontend/.gitignore": true,
+        "frontend/tailwind.config.js": true
+    },
+    "explorerExclude.backup": {}
+}
+ 

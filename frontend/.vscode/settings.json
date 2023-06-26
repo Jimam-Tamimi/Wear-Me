@@ -1,0 +1,19 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "tailwind.config.js": true,
+        "README.md": true,
+        "postcss.config.js": true,
+        "package.json": true,
+        "package-lock.json": true,
+        "next.config.js": true,
+        "jsconfig.json": true,
+        ".gitignore": true
+    },
+    "explorerExclude.backup": {}
+}

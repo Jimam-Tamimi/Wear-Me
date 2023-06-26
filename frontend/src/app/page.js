@@ -7,9 +7,9 @@ import Speciality from '@/components/home/Speciality'
 import ProductList from '@/components/home/ProductList'
 import Promo from '@/components/home/Promo'
 import LogoClouds from '@/components/home/LogoClouds'
-
 export default function Home() {
   return (
+    
     <>
     <Hero/>
     <BestSelling />
