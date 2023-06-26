@@ -5,10 +5,12 @@ import { Inter } from 'next/font/google'
 import Header from '@/components/Header'
 import Cart from '@/components/Cart'
 import { useState } from 'react'
+import { Provider, useSelector, useDispatch } from 'react-redux'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import store from '../redux/store'
-import { Provider } from 'react-redux'
-
+import Loading from '@/components/Loading'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -18,17 +20,31 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   const [openCart, setOpenCart] = useState(true)
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <Provider store={store}>
+          <Loading />
 
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <Header />
           {children}
           <Footer />
-          </Provider>
+        </Provider>
 
-          </body>
-        </html>
-        )
+      </body>
+    </html>
+  )
 }

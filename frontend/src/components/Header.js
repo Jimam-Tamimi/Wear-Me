@@ -7,7 +7,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { usePathname, } from 'next/navigation'
 import Cart from './Cart'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '@/redux/slices/account/accountSlice'
 
 const navigation = [
     { name: 'Home', href: '/' },
@@ -18,13 +19,16 @@ const navigation = [
 
 export default function Header() {
     const pathname = usePathname()
-    if(pathname.startsWith("/account/")){
-      return
+    if (pathname.startsWith("/account/")) {
+        return
     }
-    
-    
+    const account = useSelector(state => state.account)
+    console.log()
+
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [openCart, setOpenCart] = useState(false)
+    const dispatch= useDispatch()
 
     return (
         <>
@@ -50,11 +54,12 @@ export default function Header() {
                             ))}
                         </div>
                         <div className="hidden lg:flex lg:gap-x-12">
-                            <Link href='/login'  
-                        className=" ease-in-out duration-300   rounded-md border hover:border-transparent  border-indigo-600   text-sm px-3 py-1 font-medium text-indigo-600 hover:text-white shadow-sm hover:bg-indigo-600"
-                            
-                            >Login</Link>
-                        </div>
+                            {
+                                account?.account?.isAuthenticated?
+                                <button onClick={e => dispatch(logout())} className=" ease-in-out duration-300   rounded-md border hover:border-transparent  border-indigo-600   text-sm px-3 py-1 font-medium text-indigo-600 hover:text-white shadow-sm hover:bg-indigo-600">Logout</button>:
+                                <Link href='/account/login/' className=" ease-in-out duration-300   rounded-md border hover:border-transparent  border-indigo-600   text-sm px-3 py-1 font-medium text-indigo-600 hover:text-white shadow-sm hover:bg-indigo-600">Login</Link>
+                            }
+                            </div>
 
                     </div>
 

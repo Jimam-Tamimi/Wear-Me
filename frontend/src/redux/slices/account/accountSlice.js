@@ -36,7 +36,7 @@ export const loginUser = createAsyncThunk(
           return account
         }
       } catch (err) {
-        console.log(err)
+        // console.log(err)
 
       }
   }
@@ -47,7 +47,15 @@ export const accountSlice = createSlice({
   name: 'account',
   initialState,
   reducers: {
- 
+    logout: (state) => {
+      return {
+        access: null,
+        refresh: null,
+        isAuthenticated: false,
+        userId: null
+      }
+
+    }
   },
   extraReducers: builder => {
     builder.addCase(loginUser.fulfilled, (state, action) => {
@@ -57,5 +65,7 @@ export const accountSlice = createSlice({
   }
 })
 
+
+export const {logout} = accountSlice.actions
 
 export default accountSlice.reducer
