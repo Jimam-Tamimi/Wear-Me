@@ -168,3 +168,11 @@ CORS_ALLOWED_ORIGINS = [
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR / 'media'
+
+
+
+# sslcommerz
+SSLCZ_SESSION_API = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php'
+store_id = "jimam649a2c71b2b70"
+store_passwd = "jimam649a2c71b2b70@ssl"
+

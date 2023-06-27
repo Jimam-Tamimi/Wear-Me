@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+
+from .sslcommerz import get_session
 from .models import Color, Order, OrderItem, Product, Size
 from .serializers import OrderSerializer, ProductSerializer
 
@@ -43,4 +47,60 @@ class OrderViewSet(ModelViewSet):
             )
         order.products.set(products)
         order.save()
-        return Response({'success': True})
+
+        
+        # sslcommerz payment
+        payment_gateway = get_session(order, order.totalPrice)
+        print(payment_gateway)
+        return Response({'success': payment_gateway})
+    
+    
+
+
+from django.views.decorators.csrf import csrf_exempt
+
+# sslcommerz payment response views
+
+
+@csrf_exempt    
+def sslcommerzPaymentSuccess(request):
+    data = request.POST
+    print(data)
+    if data['status'] =='VALID':
+        try:
+            order = Order.objects.get(id=data['value_a']) # order id is passed in value_a
+        except Exception as e:
+            print(e )        
+        return redirect(f'/order-confirmed/{order.id}/')
+    else:
+        return redirect('/order-failed/')
+
+        
+    
+
+
+@csrf_exempt
+def sslcommerzPaymentFail(request):
+    print(request.POST)
+    data = request.POST
+    try:
+        order = Order.objects.get(id=data['value_a']) # order id is passed in value_a
+        return redirect(f'/order-failed/{order.id}/')
+    except Exception as e:
+        return redirect('/order-failed/')
+    
+
+@csrf_exempt    
+def sslcommerzPaymentCancel(request):
+    print(request.POST)
+    data = request.POST
+    return redirect('/checkout/')
+
+        
+        
+
+
+@csrf_exempt    
+def sslcommerzPaymentIpn(request):
+    print(request.POST)
+    return HttpResponse('ipn')
