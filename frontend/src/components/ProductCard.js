@@ -1,8 +1,8 @@
 'use client'
 
-import { addProduct } from '@/redux/slices/cart/cartSlice'
+import { addProduct, removeCartProduct } from '@/redux/slices/cart/cartSlice'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function ProductCard({ product }) {
@@ -24,13 +24,44 @@ export default function ProductCard({ product }) {
         }))
     }
 
+    useEffect(() => {
+        let cartProductIndex = cart.findIndex(p => p.id == cartProduct?.id)
+        if(cartProductIndex !== -1) {
+
+            updateCartProduct(cart[cartProductIndex])
+        } else {setCartProduct({})}
+      return () => {
+        
+      }
+    }, [cart])
+    
     function buyNow() {
 
     }
 
     function addToCart() {
-        dispatch(addProduct(cartProduct))
+        if(cartProduct.color && cartProduct.size){
+            dispatch(addProduct(cartProduct))
+        }
     }
+    function removeFromCart() {
+        dispatch(removeCartProduct(cartProduct))
+    }
+    function needToRemove() {
+        let cartProductIndex = cart.findIndex(p => p.id == cartProduct?.id)
+        if(cartProductIndex == -1) {
+            return false
+        }
+        if(!cartProduct){
+            return false
+        }
+        if ((cartProduct?.size?.id== cart[cartProductIndex]?.size?.id) &&
+                            (cartProduct?.color?.id== cart[cartProductIndex]?.color?.id)){
+                                return true
+        } 
+    }
+    // console.log(cartProduct)
+    // console.log(cart)
     return (
         <>
             {/* <button onClick={e => console.log({cartProduct,cart})}>click</button> */}
@@ -51,26 +82,30 @@ export default function ProductCard({ product }) {
                     </h2>
                     <div className=" select-none flex flex-wrap max-w-full mb-3">
                         {
-                            product.colors.map((color, i) => {
-                                return (
-                                    <>
-                                        <div onClick={e => updateCartProduct({ color })} style={{ backgroundColor: color?.color_code }} key={color?.id} className={`rounded-full w-4 h-4 mr-2  scale-110 cursor-pointer hover:scale-125 duration-300 transition-all ease-in-out  ${cartProduct?.color?.id === color.id ? 'scale-150 ' : ''} active:scale-90`}></div>
-                                    </>
+                            product.colors.map((color, i) =>  (
+                                        <div key={i} onClick={e => updateCartProduct({ color })} style={{ backgroundColor: color?.color_code }}  className={`rounded-full w-4 h-4 mr-2  scale-110   cursor-pointer hover:scale-125 duration-300 transition-all ease-in-out 
+                                         ${cartProduct?.color?.id == color.id ?  'scale-150': ''} active:scale-90`}></div>
                                 )
-                            })
+                            )
                         }
                     </div>
                     <div className=" flex flex-wrap max-w-full mb-2">
                         {
                             product.sizes.map((size, i) => (
-                                <span key={size?.id} onClick={e => updateCartProduct({ size })} className={`select-none bg-gray-200 text-black text-sm font-semibold px-2 py-[2.5px] rounded-md mr-2 cursor-pointer hover:scale-110 duration-300 transition-all ease-in-out hover:bg-gray-300  active:scale-90 ${cartProduct?.size?.id === size?.id ? 'scale-110 bg-gray-400' : ''} `}>{size?.size}</span>
+                                <span key={size?.id} onClick={e => updateCartProduct({ size })} className={`select-none bg-gray-200 text-black text-sm font-semibold px-2 py-[2.5px] rounded-md mr-3 cursor-pointer hover:scale-110 duration-300 transition-all ease-in-out hover:bg-gray-300  active:scale-90 ${cartProduct?.size?.id === size?.id ? 'scale-125 bg-gray-400' : ''} `}>{size?.size}</span>
                             ))
                         }
                     </div>
                     <p className="mt-1 ">৳ {product.price}</p>
                     <div className='flex  mt-2'>
                         <button onClick={buyNow} className='text-sm bg-red-500 text-white mr-4 font-bold py-2  px-4 rounded hover:scale-105 ease-in-out duration-300 transition-all hover:bg-red-600 active:scale-75'>Buy Now</button>
-                        <button onClick={addToCart} className='text-sm bg-indigo-600 text-white font-bold py-2  px-4 rounded hover:scale-105 ease-in-out duration-300 transition-all hover:bg-indigo-700  active:scale-75'>Add To Cart</button>
+
+ 
+                        {
+                            needToRemove() ?
+                            <button onClick={removeFromCart} className='text-sm bg-indigo-600 text-white font-bold py-2  px-4 rounded hover:scale-105 ease-in-out duration-300 transition-all hover:bg-indigo-700  active:scale-75'>Remove From Cart</button>   :
+                            <button onClick={addToCart} className='text-sm bg-indigo-600 text-white font-bold py-2  px-4 rounded hover:scale-105 ease-in-out duration-300 transition-all hover:bg-indigo-700  active:scale-75'>Add To Cart</button>
+                        }
                     </div>
                 </div>
             </div>

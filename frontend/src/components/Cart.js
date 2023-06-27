@@ -42,7 +42,10 @@ export default function Cart({ open, setOpen }) {
   async function getProducts(cart) {
 
 
-
+    if(cart.length == 0){
+      setCartProducts([])
+      return
+    }
     let tmpProducts = []
     for (let i = 0; i < cart.length; i++) {
       const product = cart[i];

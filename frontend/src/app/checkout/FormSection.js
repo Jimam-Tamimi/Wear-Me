@@ -1,22 +1,31 @@
 'use client'
 
+import { updateLoader } from '@/redux/slices/loading/loadingSlice';
 import axios from 'axios';
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function FormSection({ cartProducts }) {
+    const dispatch = useDispatch()
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const cart = useSelector(state => state.cart)
     const onSubmit = async data => {
+        dispatch(updateLoader(30))
+
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}shop/api/order/`, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}shop/api/orders/`, {
                 products: cart,
                 ...data 
             })
-            console.log(res)
+            if( res.status == 200){
+                dispatch(updateLoader(100))
+
+                window.location.replace(res?.data.gatewayPageURL)
+            }
         } catch(err){
             console.log(err)
         }
+        dispatch(updateLoader(100))
 
         // sessionStorage.setItem('order-details', JSON.stringify({
         // }))

@@ -68,7 +68,7 @@ export default async function BestSelling() {
   // }, [])
 
   const products = await fetchProducts();
-  console.log(products);
+  // console.log(products);
 
   return (
     <>
@@ -109,16 +109,7 @@ export default async function BestSelling() {
           <div className="flex flex-wrap m-4 justify-between">
             {products.map((product) => (
               <ProductCard product={product} />
-            ))} 
-            {products.map((product) => (
-              <ProductCard product={product} />
-            ))} 
-            {products.map((product) => (
-              <ProductCard product={product} />
-            ))} 
-            {products.map((product) => (
-              <ProductCard product={product} />
-            ))} 
+            ))}  
           </div>
         </div>
       </section>

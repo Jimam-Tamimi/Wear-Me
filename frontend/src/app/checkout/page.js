@@ -4,6 +4,7 @@ import FormSection from './FormSection'
 import ProductSection from "./ProductSection";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails } from "@/helpers";
+import { updateLoader } from "@/redux/slices/loading/loadingSlice";
 export default function Checkout() {
   let cart = useSelector(state => state.cart)
   const dispatch = useDispatch()
@@ -24,7 +25,9 @@ export default function Checkout() {
   }
 
   useEffect(() => {
+    dispatch(updateLoader(30))
     getProducts(cart)
+    dispatch(updateLoader(100))
     return () => {
     }
   }, [cart.length])

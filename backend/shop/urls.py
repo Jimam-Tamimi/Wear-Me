@@ -6,7 +6,7 @@ from .views import OrderViewSet, ProductViewSet, sslcommerzPaymentCancel, sslcom
 router = SimpleRouter()
 
 router.register('api/products', ProductViewSet)
-router.register('api/order', OrderViewSet)
+router.register('api/orders', OrderViewSet)
 
 urlpatterns = [
     path('sslcommerz/success/', sslcommerzPaymentSuccess),

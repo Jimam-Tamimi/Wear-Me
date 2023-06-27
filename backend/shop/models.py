@@ -70,6 +70,7 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
+    trackingId = models.CharField(verbose_name='Tracking Id', max_length=200, null=True, blank=True)
     products = models.ManyToManyField(OrderItem, verbose_name=_('Products'))
     fName = models.CharField(verbose_name=_("First Name"), max_length=30, null=False, blank=False)
     lName = models.CharField(verbose_name=_("Last Name"), max_length=30, null=False, blank=False)
