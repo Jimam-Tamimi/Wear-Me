@@ -1,11 +1,25 @@
 'use client'
 
+import axios from 'axios';
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux';
 
-export default function FormSection() {
+export default function FormSection({ cartProducts }) {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const cart = useSelector(state => state.cart)
+    const onSubmit = async data => {
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}shop/api/order/`, {
+                products: cart,
+                ...data 
+            })
+            console.log(res)
+        } catch(err){
+            console.log(err)
+        }
 
-    const onSubmit = data => {
+        // sessionStorage.setItem('order-details', JSON.stringify({
+        // }))
         console.log(data);
     }
 
@@ -60,22 +74,22 @@ export default function FormSection() {
                     <div className="lg:ml-[1px] space-y-2 ">
 
                         <div className="flex justify-between items-center text-sm " >
-                            <p className="font-bold">Items Total:</p> <p className="font-semibold">200$</p>
+                            <p className="font-bold">Items Total:</p> <p className="font-semibold">৳ {cartProducts.reduce((totalPrice, product) => (product.price * product.itemCount) + totalPrice, 0)}</p>
                         </div>
                         <div className="flex justify-between items-center text-sm " >
-                            <p className="font-bold">Delivery Fee:</p> <p className="font-semibold">5$</p>
+                            <p className="font-bold">Delivery Fee:</p> <p className="font-semibold">৳ 60</p>
                         </div>
                         <hr className="!mt-5" />
                         <div className="flex justify-between items-center text-sm " >
-                            <p className="font-bold">Total Payment:</p> <p className="font-semibold">205$</p>
+                            <p className="font-bold">Total Payment:</p> <p className="font-semibold">৳ {cartProducts.reduce((totalPrice, product) => (product.price * product.itemCount) + totalPrice, 0) + 60}</p>
                         </div>
                     </div>
-                </div>
+                </div>  
                 <div className="mt-6">
                     <button
                         className="lg:ml-auto ease-in-out duration-300 w-full lg:w-36 flex items-center justify-center rounded-md border hover:border-transparent  border-indigo-600 px-6 py-3 text-base font-medium text-indigo-600 hover:text-white shadow-sm hover:bg-indigo-700
               ">
-                        Checkout
+                        Place Order
                     </button>
                 </div>
             </form>

@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import ProductCounter from '@/app/checkout/ProductCounter'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getProductDetails } from '@/helpers'
+import { removeCartProduct } from '@/redux/slices/cart/cartSlice'
 
 const products = [
   {
@@ -33,15 +34,22 @@ const products = [
 ]
 
 export default function Cart({ open, setOpen }) {
-  const cart = useSelector(state => state.cart)
-  const [cartProducts, setCartProducts] = useState([])
+  let cart = useSelector(state => state.cart)
+  const dispatch = useDispatch()
+
+  const [cartProducts, setCartProducts] = useState([]) 
+
   async function getProducts(cart) {
+
+
+
     let tmpProducts = []
     for (let i = 0; i < cart.length; i++) {
       const product = cart[i];
       const res = await getProductDetails(product.slug)
-      if(res.status === 200){
-        tmpProducts.push({...res.data, size:product.size, color:product.color})
+      if (res.status === 200) {
+
+        tmpProducts.push({ ...res.data, size: product.size, color: product.color, itemCount: product.itemCount })
       }
     }
     setCartProducts(prevState => [...tmpProducts])
@@ -51,8 +59,24 @@ export default function Cart({ open, setOpen }) {
     getProducts(cart)
     return () => {
     }
+  }, [cart.length])
+  useEffect(() => {
+    let tmpProducts = []
+    for (let i = 0; i < cart.length; i++) {
+      const product = cart[i];
+
+      const cartProductIndex = cartProducts.findIndex(p => p.id == product.id)
+      if (cartProducts.findIndex(p => p.id === product.id) !== -1) {
+        tmpProducts.push({ ...cartProducts[cartProductIndex], ...product })
+      }
+    }
+    setCartProducts(tmpProducts)
+    return () => {
+    }
   }, [cart])
-  
+
+
+
   return (
     <Transition.Root style={{ zIndex: '100' }} show={open} as={Fragment}>
       <Dialog as="div" className="relative z-100" onClose={setOpen}>
@@ -114,20 +138,22 @@ export default function Cart({ open, setOpen }) {
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <Link onClick={e => setOpen(false)} href={`/product/${product?.slug}`} >{product?.name}</Link>
+                                        <Link onClick={e => setOpen(false)} href={`/product/${product?.slug}/`} >{product?.name}</Link>
                                       </h3>
-                                      <p className="ml-4 min-w-max">৳ {product.price}</p>
+                                      <p className="ml-4 min-w-max">৳ {product.price * product.itemCount}</p>
                                     </div>
+                                    <p className="mt- text-sm text-gray-500">Color: <span style={{ color: product?.color?.color_code }} className='font-bold'>{product?.color?.color}</span></p>
                                     <p className="mt-1 text-sm text-gray-500">Size: <span>{product?.size?.size}</span></p>
-                                    <p className="mt- text-sm text-gray-500">Color: <span style={{color: product?.color?.color_code}} className='font-bold'>{product?.color?.color}</span></p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     {/* <p className="text-gray-500">Qty {product.quantity}</p> */}
-                                    <ProductCounter  product={product} />
+                                    <ProductCounter product={product} />
 
                                     <div className="flex">
                                       <button
+                                        onClick={e => dispatch(removeCartProduct(product))}
                                         type="button"
+
                                         className="font-medium select-none   text-indigo-600 hover:text-indigo-500"
                                       >
                                         Remove
@@ -145,7 +171,9 @@ export default function Cart({ open, setOpen }) {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>$ {
+                          cartProducts.reduce((totalPrice, product) => (product.price * product.itemCount) + totalPrice, 0)
+                          }</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">

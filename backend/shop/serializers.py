@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Color, Product, ProductImage, Size
+from .models import Category, Color, Order, OrderItem, Product, ProductImage, Size
 
 
 
@@ -21,6 +21,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage()
         fields = "__all__"
         
+
         
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -31,3 +32,20 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+        
+
+        
+class OrderSerializer(serializers.ModelSerializer):
+    products = OrderItemSerializer(many=True, read_only=True)
+
+    totalPrice = serializers.FloatField(required=False, read_only=True)
+    payment = serializers.BooleanField(read_only=True) 
+    class Meta:
+        model = Order
+        fields = ["products", 'fName', 'lName', 'email','number', 'addNumber', 'address', 'totalPrice','payment', 'order_status']
