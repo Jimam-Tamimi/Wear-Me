@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Color, Order, OrderItem, Product, ProductImage, Size
+from .models import Category, Color, Order, OrderItem, Product, ProductImage, Review, Size
 
 
 
@@ -49,3 +49,9 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ["products", 'fName', 'lName', 'email','number', 'addNumber', 'address', 'totalPrice','payment', 'order_status']
+        
+        
+class ReviewSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model = Review
+        fields = "__all__"

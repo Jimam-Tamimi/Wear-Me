@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from .sslcommerz import get_session
-from .models import Color, Order, OrderItem,  Product, Size
-from .serializers import OrderSerializer, ProductSerializer
+from .models import Color, Order, OrderItem,  Product, Review, Size
+from .serializers import OrderSerializer, ProductSerializer, ReviewSerializer
 
 
 # Create your views here.
@@ -112,6 +112,13 @@ class OrderViewSet(ModelViewSet):
         return Response({'gatewayPageURL': payment_gateway}, status=status.HTTP_200_OK)
     
     
+class ReviewViewSet(ModelViewSet):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+    
+    http_method_names = ["get", 'post']
+    filterset_fields = ['product', 'order']
+
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -133,7 +140,7 @@ def sslcommerzPaymentSuccess(request):
         print(trackingId)
         order.trackingId = trackingId
         order.save()
-        return redirect(f'/order-confirmed/{trackingId}/')
+        return redirect(f'/orders/{trackingId}/')
     else:
         return redirect('/order-failed/')
 

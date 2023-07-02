@@ -56,6 +56,11 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
+
+    
+    
+    
+    
     
 def get_product_color_text(c):
     print(c)
@@ -84,4 +89,14 @@ class Order(models.Model):
     
     def __str__(self):
         return f"{self.fName} {self.lName}" 
+    
+
+class Review(models.Model):
+    order = models.ForeignKey(Order, verbose_name=_("Order"), on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, verbose_name=_("Product"), on_delete=models.CASCADE, null=False, blank=False)
+    feedback = models.CharField(_('Feedback'), null=False, blank=False, max_length=300)
+    rating = models.PositiveIntegerField(_("Rating"), null=False, blank=False)
+    def __str__(self):
+        return f"{self.product.name} - {self.rating}"
+    
     
