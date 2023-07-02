@@ -29,6 +29,14 @@ class ProductSerializer(serializers.ModelSerializer):
     colors = ColorSerializer(many=True, read_only=True)
     sizes = SizeSerializer(many=True, read_only=True)
     images = ProductImageSerializer(many=True, read_only=True)
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, obj):
+       print(self)
+       print(obj)
+       reviews = obj.get_reviews()
+       return Review.getAverageRating(Review, reviews=reviews)
+   
     class Meta:
         model = Product
         fields = "__all__"

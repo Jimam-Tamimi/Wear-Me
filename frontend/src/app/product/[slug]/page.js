@@ -2,6 +2,8 @@
 import { StarIcon } from '@heroicons/react/20/solid'
 import AddToCart from './AddToCart'
 import axios from 'axios'
+import Reviews from './Reviews';
+import RateChild from './RateChild';
  
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -49,11 +51,11 @@ export default async function Product({params}) {
               <p className="text-3xl tracking-tight text-gray-900">৳ {product.price}</p>
 
               {/* Reviews */}
-              <div className="mt-6">
+              <div className="mt-4">
                 <h3 className="sr-only">Reviews</h3>
                 <div className="flex items-center">
                   <div className="flex items-center">
-                    {[0, 1, 2, 3, 4].map((rating) => (
+                    {/* {[0, 1, 2, 3, 4].map((rating) => (
                       <StarIcon
                         key={rating}
                         className={classNames(
@@ -62,7 +64,8 @@ export default async function Product({params}) {
                         )}
                         aria-hidden="true"
                       />
-                    ))}
+                    ))} */}
+                    <RateChild rating={product.rating}  className=""/>
                   </div>
                   <p className="sr-only"> out of 5 stars</p>
                   <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
@@ -77,7 +80,7 @@ export default async function Product({params}) {
         </div>
 
 
-        <div className="pb-10 lg:col-span-2 lg:col-start-1 lg lg:pb-16 lg:pr-8 lg:pt-6 m-auto-2xl mt-9 m-auto max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className=" lg:col-span-2 lg:col-start-1 lg   lg:pr-8 lg:pt-6 m-auto-2xl mt-9 m-auto max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
           {/* Description and details */}
           <div>
             <h3 className="text-3xl font-bold mb-6">Description</h3>
@@ -89,7 +92,8 @@ export default async function Product({params}) {
 
     
         </div>
-
+          
+          <Reviews productId={product.id}/>
       </div>
     </div>
   )

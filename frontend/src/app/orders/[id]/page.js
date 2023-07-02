@@ -99,7 +99,7 @@ export default function page({ params }) {
                   </div>
                 </div>
                 {
-                  orderItem.order_status === 'Products Delivered' && <Review orderDetails={orderDetails} orderItem={orderItem} />
+                  orderDetails.order_status == 'Products Delivered' ?  <Review orderDetails={orderDetails} orderItem={orderItem} />:''
                 }
               </div>
 

@@ -58,7 +58,8 @@ class Product(models.Model):
         return super().save(*args, **kwargs)
 
     
-    
+    def get_reviews(self):
+        return Review.objects.filter(product=self)
     
     
     
@@ -89,6 +90,8 @@ class Order(models.Model):
     
     def __str__(self):
         return f"{self.fName} {self.lName}" 
+
+    
     
 
 class Review(models.Model):
@@ -99,4 +102,6 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.rating}"
     
-    
+    def getAverageRating(self, reviews):
+        return sum(review.rating for review in reviews) / len(reviews)
+        
